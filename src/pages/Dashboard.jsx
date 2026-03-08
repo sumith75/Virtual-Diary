@@ -7,7 +7,15 @@ import { useNavigate } from "react-router-dom";
 import { uploadProfileImage } from "../util/cloudinary";
 import TodoWidget from "../components/TodoWidget";
 
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs
+} from "firebase/firestore";
 
 export default function Dashboard() {
 
@@ -15,8 +23,9 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   const [photoURL, setPhotoURL] = useState("");
+  const [entryCount, setEntryCount] = useState(0);
 
-  /* LOAD PROFILE IMAGE */
+  /* LOAD PROFILE + ENTRY COUNT */
 
   useEffect(() => {
 
@@ -31,7 +40,20 @@ export default function Dashboard() {
 
     };
 
+    const fetchEntryCount = async () => {
+
+      const q = query(
+        collection(db, "journals"),
+        where("uid", "==", auth.currentUser.uid)
+      );
+
+      const snap = await getDocs(q);
+      setEntryCount(snap.size);
+
+    };
+
     loadProfile();
+    fetchEntryCount();
 
   }, []);
 
@@ -51,6 +73,7 @@ export default function Dashboard() {
     );
 
     setPhotoURL(imageUrl);
+
   };
 
   /* DELETE IMAGE */
@@ -70,6 +93,7 @@ export default function Dashboard() {
     );
 
     setPhotoURL("");
+
   };
 
   return (
@@ -145,6 +169,12 @@ export default function Dashboard() {
             Welcome, {auth.currentUser?.displayName} ✨
           </h1>
 
+          {/* ENTRY COUNT */}
+
+          <p className="text-lg text-gray-600 dark:text-gray-300">
+            📖 Total Entries: {entryCount}
+          </p>
+
           <p className="text-gray-600 dark:text-gray-300 text-center max-w-md">
             Your personal space to reflect, write, and remember.
           </p>
@@ -195,6 +225,7 @@ export default function Dashboard() {
             <p className="text-gray-600 dark:text-gray-300 mt-2">
               Capture your thoughts and feelings
             </p>
+
           </div>
 
           {/* MEMORIES */}
@@ -215,6 +246,7 @@ export default function Dashboard() {
             <p className="text-gray-600 dark:text-gray-300 mt-2">
               Revisit your past entries
             </p>
+
           </div>
 
           {/* TODO WIDGET */}
