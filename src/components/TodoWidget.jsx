@@ -174,10 +174,11 @@ export default function TodoWidget() {
             <div className="flex items-center gap-2">
 
               <input
-                type="checkbox"
-                checked={todo.completed}
-                onChange={() => toggleTodo(todo)}
-              />
+  type="checkbox"
+  className="w-5 h-5"
+  checked={todo.completed}
+  onChange={() => toggleTodo(todo)}
+/>
 
               <span
                 className={`text-gray-900 dark:text-white ${
