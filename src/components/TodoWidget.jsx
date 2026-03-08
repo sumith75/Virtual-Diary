@@ -17,6 +17,33 @@ export default function TodoWidget() {
   const [task, setTask] = useState("");
   const [todos, setTodos] = useState([]);
 
+  /* LOAD TODOS */
+
+  useEffect(() => {
+
+    const fetchTodos = async () => {
+
+      const q = query(
+        collection(db, "todos"),
+        where("uid", "==", auth.currentUser.uid)
+      );
+
+      const snap = await getDocs(q);
+
+      const data = snap.docs.map(d => ({
+        id: d.id,
+        ...d.data()
+      }));
+
+      setTodos(data);
+    };
+
+    fetchTodos();
+
+  }, []);
+
+  /* REFRESH TODOS */
+
   const fetchTodos = async () => {
 
     const q = query(
@@ -33,10 +60,6 @@ export default function TodoWidget() {
 
     setTodos(data);
   };
-
-  useEffect(() => {
-    fetchTodos();
-  }, []);
 
   /* ADD TODO */
 
@@ -78,6 +101,14 @@ export default function TodoWidget() {
 
   };
 
+  /* ENTER KEY ADD */
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      addTodo();
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
 
@@ -87,38 +118,57 @@ export default function TodoWidget() {
 
       {/* ADD TASK */}
 
-      <div className="flex gap-2 mb-4">
+     <div className="flex flex-col sm:flex-row gap-2 mb-4">
 
-        <input
-          value={task}
-          onChange={(e) => setTask(e.target.value)}
-          placeholder="Add new task..."
-          className="
-            flex-1
-            p-2 rounded
-            bg-gray-100 dark:bg-gray-700
-            text-gray-900 dark:text-white
-          "
-        />
+  <input
+    value={task}
+    onChange={(e) => setTask(e.target.value)}
+    onKeyDown={handleKeyDown}
+    placeholder="Add new task..."
+    className="
+      flex-1
+      p-3 rounded
+      bg-gray-100 dark:bg-gray-700
+      text-gray-900 dark:text-white
+      outline-none
+    "
+  />
 
-        <button
-          onClick={addTodo}
-          className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded"
-        >
-          Add
-        </button>
+  <button
+    onClick={addTodo}
+    className="
+      w-full sm:w-auto
+      px-4 py-3
+      bg-black text-white
+      dark:bg-white dark:text-black
+      rounded
+      hover:opacity-80
+    "
+  >
+    Add
+  </button>
 
-      </div>
+</div>
 
       {/* TASK LIST */}
 
       <div className="flex flex-col gap-2">
 
+        {todos.length === 0 && (
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            No tasks yet
+          </p>
+        )}
+
         {todos.map(todo => (
 
           <div
             key={todo.id}
-            className="flex justify-between items-center bg-gray-100 dark:bg-gray-700 p-2 rounded"
+            className="
+              flex justify-between items-center
+              bg-gray-100 dark:bg-gray-700
+              p-2 rounded
+            "
           >
 
             <div className="flex items-center gap-2">
