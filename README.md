@@ -2,9 +2,9 @@
 A modern full-stack journaling and productivity application that allows users to securely record their daily thoughts, track moods, manage tasks, and revisit memories.
 Designed with a focus on privacy, usability, and real-world product architecture.
 
-🚀 Live Demo
+## 🚀 Live Demo
 
-**Live Demo:** [https://virtual-diary-six.vercel.app/](https://virtual-diary-six.vercel.app/)
+[Click here](https://virtual-diary-six.vercel.app/)
 
 
 📌 Problem Statement
