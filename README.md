@@ -4,7 +4,7 @@ Designed with a focus on privacy, usability, and real-world product architecture
 
 🚀 Live Demo
 
-Live App:  [https://virtual-diary-sumith.vercel.app/](https://virtual-diary-sumith.vercel.app/)
+Live App:  https://virtual-diary-six.vercel.app/
 
 
 📌 Problem Statement
